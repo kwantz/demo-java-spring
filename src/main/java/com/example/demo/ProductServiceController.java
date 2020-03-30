@@ -27,6 +27,9 @@ public class ProductServiceController {
 
     @RequestMapping(value = "/products/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Object> updateProduct(@RequestBody Product product, @PathVariable("id") Integer id) {
+        if (!productRepo.containsKey(id))
+            throw new ProductNotFoundException();
+
         productRepo.remove(id);
         productRepo.put(id, product);
         return new ResponseEntity<>(productRepo.get(product.getId()), HttpStatus.OK);
@@ -34,6 +37,9 @@ public class ProductServiceController {
 
     @RequestMapping(value = "/products/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Object> delteProduct(@PathVariable("id") Integer id) {
+        if (!productRepo.containsKey(id))
+            throw new ProductNotFoundException();
+
         productRepo.remove(id);
         return new ResponseEntity<>("Product is deleted successsfully", HttpStatus.OK);
     }
